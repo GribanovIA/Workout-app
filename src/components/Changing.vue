@@ -1,46 +1,67 @@
 <template>
         <div class="input">
-            <transition>
-                <div v-if='isShow' @click='edit' class="text-changing">{{value}}</div>
-                <b-form-input @update='update'  class='input-changing' @blur="edited" @keyup.enter='$event.target.blur()' :value='value' v-else></b-form-input>
-            </transition>
+                <b-form-input @update='update' :class='tag' class='input-changing' @click='edit' @blur='edited'  @keyup.enter='$event.target.blur()' :value='valueModified'></b-form-input>
         </div>
 
 </template>
 
 <script>
 export default {
-    props: ['value'],
+    props:{
+        value:{
+
+        },
+        tag:{
+
+        },
+        textBefore:{
+            default: ''
+        },
+        textAfter:{
+            default: ''
+        },
+        "tag-modile":{
+
+        }
+    },
     data() {
         return {
-            isShow: true,
             beforeChanging: '',
-            // Родительский узел очень важен т.к. при использовании функции querySelector поиск должне вестись в конкретном помпоненте а не во все документе, иначе свойства применяется не к тому элементу
-            parentNode: ''
+            number: this.value
+            
+        }
+    },
+    computed:{
+        valueModified(){
+            return this.textBefore+this.value+this.textAfter
+            
+            ;
         }
     },
     methods:{
         update(value){
-            this.$emit('input',value);
+            
+            let number = value.match(/[0-9]+/) ? value.match(/[0-9]+/)[0] : '' ;
+            this.number = number;
+            
             
         },
         edit(e){
-            // Находим самый корневой элемент
-            this.parentNode = e.target.closest('.input');
-            this.isShow = !this.isShow;
-            // Необходима небольшая задержка, т.к. Элемента Input еще нет в документе
-            setTimeout(() => {
-                let input = this.parentNode.querySelector('.input-changing');
-                input.focus();
-            }, 0);
-            
+            let text = e.target;
+            text.value = this.number;
+            text.classList.remove('changed');
             this.beforeChanging = this.value;
-            
         },
-        edited(){
-            this.isShow = !this.isShow;
+        edited(e){
+            console.log(this.value);
+            console.log(this.number);
+            // Ебаный костыль
+            if(this.value === this.number){
+                this.number = this.number+'\r';
+            }
+            this.$emit('input',this.number+'');
             setTimeout(() => {
-                let text = this.parentNode.querySelector('.text-changing');
+                let text = e.target;
                 if(this.beforeChanging != this.value){
                     text.classList.add('changed');
                 }
@@ -52,29 +73,24 @@ export default {
 
 <style scoped lang="scss">
     .input{
-        position: relative;
-        height: 38px;
-        margin-bottom: 15px;
-    }
-    .text-changing{
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        margin-bottom: 13px;
-        cursor: pointer;
-        &:hover{
-            background-color: rgb(255, 255, 236);
-        }
-    }
-    .input-changing{
-        position: absolute;
-        padding-left: 0;
-        left: -1px;
+        display: flex;
+        margin-right: 15px;
+        font-size: 10px;
     }
     .changed{
         animation: changeColor 2s ease-out;
 
     }
+    .form-control{
+        transition: all .25s ease-out;
+        border: 0px solid #000;
+        cursor: pointer;
+        // &:hover{
+        //     background-color: rgb(255, 255, 236);
+        // }
+    }
+
+
     @keyframes changeColor {
         from{
             background-color: rgb(245, 245, 153);
@@ -83,27 +99,33 @@ export default {
             background-color: rgb(255, 255, 255);
         }
     }
-
-    .v-leave{
-        opacity: 1;
+    .h1 {
+        font-size: 2.5rem;
         
     }
-    .v-leave-active{
-        transition: opacity .65s ease;
+    .h2 {
+        font-size: 2rem;
+    }
+    .h3 {
+        font-size: 1.75rem;
+    }
+    .h4 {
+        font-size: 1.5rem;
+    }
+    .h5 {
+        font-size: 1rem;
+    }
+    .h1, .h2, .h3, .h4, .h5, .h6 {
+        margin-bottom: .5rem;
+        font-family: inherit;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+    @media screen and (max-width: 576px) {
         
+        .h1 {
+            font-size: 1rem;
 
-    }
-    .v-leave-to{
-        opacity: 0;
-        
-
-    }
-    .v-enter{
-        opacity: 0;
-
-    }
-    .v-enter-active{
-        transition: opacity .65s ease;
-
+        }
     }
 </style>

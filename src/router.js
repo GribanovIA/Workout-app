@@ -10,7 +10,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       meta:{
           layout: 'main'
       },
@@ -34,15 +34,23 @@ const router = new Router({
     },
     {
         path: '/newGoals',
-        name: 'newGoals',
+        name: 'New Goals',
         meta: {
             layout: 'main'
         },
         component: () => import('./views/NewGoals.vue')
     },
     {
+        path: '/newGoals/:goalName',
+        name: 'New Goals',
+        meta: {
+            layout: 'main'
+        },
+        component: () => import('./views/EditGoal.vue')
+    },
+    {
         path: '/calendar',
-        name: 'calendar',
+        name: 'Calendar',
         meta: {
             layout: 'main'
         },
@@ -50,7 +58,7 @@ const router = new Router({
     },
     {
         path: '/createWorkout',
-        name: 'createWorkout',
+        name: 'Create Workout',
         meta: {
             layout: 'main'
         },
