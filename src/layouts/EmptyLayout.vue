@@ -1,6 +1,9 @@
 <template>
     <div class='layout-grey'>
-        <router-view />
+        <b-container>
+            <router-view />
+        </b-container>
+        
     </div>
 </template>
 
@@ -16,6 +19,7 @@ export default {
 
 
 <style scoped lang="scss">
+
     .layout-grey{
         background-color: rgb(190, 190, 190);
     }
