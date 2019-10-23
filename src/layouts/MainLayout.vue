@@ -13,6 +13,9 @@
                     <b-navbar-nav class='ml-auto'>
                         <b-nav-item to='/login'>Login</b-nav-item>
                         <b-nav-item to='/registration'>Registration</b-nav-item>
+                        <b-nav-item @click='logout'>Logout</b-nav-item>
+                        <b-nav-item @click='getId'>Get User id</b-nav-item>
+                        <b-nav-item to='/allTrainings'>All Trainings</b-nav-item>
                         <b-nav-item>Settings</b-nav-item>
                     </b-navbar-nav>
                 </b-collapse>
@@ -29,6 +32,9 @@
 <script>
 export default {
     name: 'MainLayout',
+    async mounted(){
+        await this.$store.dispatch('fetchInfo');
+    },
     data() {
         return {
 
@@ -38,7 +44,14 @@ export default {
 
     },
     methods:{
-
+        async logout(){
+            await this.$store.dispatch('logout');
+            this.$router.push('/login');
+        },
+        getId(){
+            let user = this.$store.dispatch('getUid');
+            console.log(user);
+        }
     },
     components:{
 
@@ -46,7 +59,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
     .main{
         
     }

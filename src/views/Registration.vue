@@ -4,18 +4,18 @@
             <div class="main">
                 <h3>Registration</h3>
                 <div class="input">
-                    <b-form-input placeholder="Email"></b-form-input>
+                    <b-form-input v-model='email' placeholder="Email"></b-form-input>
                     <b-form-text>We will convert your username to lowercase instantly</b-form-text>
                 </div>
                 <div class="input">
-                    <b-form-input type='password' placeholder='Password'></b-form-input>
+                    <b-form-input v-model='password' type='password' placeholder='Password'></b-form-input>
                     <b-form-text>We will convert your username to lowercase instantly</b-form-text>
                 </div>
                 <div class="input">
-                    <b-form-input placeholder='Name'></b-form-input>
+                    <b-form-input v-model='name' placeholder='Name'></b-form-input>
                     <b-form-text>We will convert your username to lowercase instantly</b-form-text>
                 </div>
-                <b-btn variant="primary">Зарегистрироваться</b-btn>
+                <b-btn @click='submit' variant="primary">Зарегистрироваться</b-btn>
                 <p>Уже есть аккаунт? <router-link to='/login'>Войти</router-link></p>
             </div>
         </b-col>
@@ -26,6 +26,23 @@
 export default {
     data() {
         return {
+            email: '',
+            password: '',
+            name: '',
+            
+        }
+    },
+    methods:{
+        async submit(){
+            let formData = {
+                email: this.email,
+                password: this.password,
+                name: this.name
+            }
+            try{
+                await this.$store.dispatch('register', formData);
+                this.$router.push('/');
+            }catch(e){}
             
         }
     }

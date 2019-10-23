@@ -99,8 +99,8 @@ export default {
             let name = event.target.getAttribute('name');
             this[name] = value;
         },
-        addWorkout(){
-            this.$store.commit('addWorkout',this.payload);
+        async addWorkout(){
+            await this.$store.dispatch('addWorkout',this.payload);
             this.payload = {
                 workoutName: '',
                 exercises:[
@@ -145,7 +145,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
     .root{
         width: 100%;
     }

@@ -63,6 +63,14 @@ const router = new Router({
             layout: 'main'
         },
         component: ()=> import('./views/CreateWorkout.vue')
+    },
+    {
+        path: '/allTrainings',
+        name: 'All Trainings',
+        meta: {
+            layout: 'main'
+        },
+        component: ()=> import('./views/AllTrainings.vue')
     }
 
   ]
