@@ -33,7 +33,9 @@
 export default {
     name: 'MainLayout',
     async mounted(){
-        await this.$store.dispatch('fetchInfo');
+        console.log('main layout start');
+        await this.$store.dispatch('fetchInfoFromDatabase');
+        console.log('main layout fetched info');
     },
     data() {
         return {

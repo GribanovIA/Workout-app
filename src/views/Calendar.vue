@@ -38,7 +38,7 @@
                     <div class="legend">
                         <div class="today">
                             <div class="today-circle"></div>
-                            <p class='lead'>Сегодняшний день</p>
+                            <p class='lead'>Сегодня</p>
                         </div>
                         <div class="success">
                             <div class="success-circle"></div>
@@ -130,13 +130,14 @@
                     6: 'Сб'
                 }
                 let days = [];
-                // Заполняем пустыми значениями
+                // Заполняем пустыми значениями, чтобы указать каким днем недели является 1-ое число месяца.
                 for(let i=0; i<dayWeek-1; i++){
                     days.push({date: '', name: ''});
                 }
-                // Узнаем кол-во дней в месяце
+                // Узнаем кол-во дней в месяце и заполняем массив
                 let i = 0;
                 do{
+                    // Изменяет дату на 1 день вперед
                     date.setDate(++i);
                     let day = date.getDay();
                     // Делаем проверку на текущий день

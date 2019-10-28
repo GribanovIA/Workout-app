@@ -2,11 +2,11 @@
     <div>
         <b-breadcrumb :items='breadcrumbs'></b-breadcrumb>
         <b-row>
-            <b-col v-for='goal in goals' cols="12" sm=4>
-                <router-link tag='div' :to='"/newGoals/"+goal.title'>
-                    <b-card :title="goal.title">
+            <b-col v-for='workout in workouts' cols="12" sm=4>
+                <router-link tag='div' :to='`/newGoals/`+workout.workoutName+`?id=${workout.id}`'>
+                    <b-card :title="workout.workoutName">
                         <b-card-text>
-                            {{goal.description}}
+                            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                         </b-card-text>
                     </b-card>
                 </router-link>
@@ -30,36 +30,45 @@ export default {
                 },
 
             ],
-            goals:[
-                {
-                    title: 'Ноги+Грудь',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-                {
-                    title: 'Спина+Трицепс',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-                {
-                    title: 'Пресс',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-                {
-                    title: 'Руки',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-                {
-                    title: 'Ноги полностью',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-                {
-                    title: 'Ноги+Грудь',
-                    description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-                },
-            ]
+            // goals:[
+            //     {
+            //         title: 'Ноги+Грудь',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            //     {
+            //         title: 'Спина+Трицепс',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            //     {
+            //         title: 'Пресс',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            //     {
+            //         title: 'Руки',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            //     {
+            //         title: 'Ноги полностью',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            //     {
+            //         title: 'Ноги+Грудь',
+            //         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+            //     },
+            // ]
         }
     },
     computed:{
-
+        workouts(){
+            let workouts = this.$store.getters.workouts;
+            let workoutsArray = [];
+            for (let key in workouts){
+                let elem = workouts[key];
+                elem.id = key
+                workoutsArray.push(elem);
+            }
+            return workoutsArray;
+        }
     }
 }
 </script>

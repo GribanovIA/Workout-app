@@ -1,17 +1,21 @@
 <template>
-    <div>
-        <b-breadcrumb :items="breadcrumbs"></b-breadcrumb>
-        <h1 class='display-4'>{{$route.params.goalName}}</h1>
-        <div class="exercises">
-            <h3>Жим лежа</h3>
-            <b-card v-for="(set, index) in sets" :header="'Подход '+(index+1)" :key='index'>
-                <b-card-text>
-                    <Changing class='size' textBefore='Вес: ' textAfter=' кг' :value='set.weight' v-model='set.weight' tag='h1'></Changing>
-                    <Changing class='size' textBefore="Повторения: " :value='set.reps' v-model='set.reps' tag='h1'></Changing>
-                </b-card-text>
-            </b-card>
+    <!-- Необходимо дождаться когда данные загрузсятся из стора, т.к. иначе будет выдавать ошибку - не находит свойство exercises. Так же необходимо ставить if на самый корневой элемент , иначе не работает. Например если поставить проверку на main выдает ошибку -->
+    <div v-if='Object.keys($store.getters.workouts).length !== 0'>
+        <div class="main">
+            <b-breadcrumb :items="breadcrumbs"></b-breadcrumb>
+            <h1 class='display-4'>{{$route.params.workoutName}}</h1>
+            
+            <div v-for='(exercise, exerciseIndex) in exercises' class="exercises" :key='exerciseIndex'>
+                <h3>{{exercise.exerciseName}}</h3>
+                <b-card v-for="(set, setIndex) in exercise.sets" :header="'Подход '+(setIndex+1)" :key='setIndex'>
+                    <b-card-text>
+                        <Changing class='size' textBefore='Вес: ' textAfter=' кг' :value='set.weight' @update="edit(exerciseIndex, setIndex, 'weight', $event)" tag='h1'></Changing>
+                        <Changing class='size' textBefore="Повторения: " :value='set.reps' @update="edit(exerciseIndex, setIndex, 'reps', $event)" tag='h1'></Changing>
+                    </b-card-text>
+                </b-card>
+            </div>
+            <b-btn @click.prevent='saveGoal' variant="success">Новая цель</b-btn>
         </div>
-        <b-btn variant="success">Новая цель</b-btn>
     </div>
 </template>
 
@@ -33,40 +37,47 @@ export default {
                     to: '/newGoals'
                 },
                 {
-                    text: this.$route.params.goalName,
+                    text: this.$route.params.workoutName,
                     active: true
                 }
             ],
-            sets:[
-                {
-                    weight: 25,
-                    reps: 18
-                },
-                {
-                    weight: 32,
-                    reps: 14
-                },
-                {
-                    weight: 45,
-                    reps: 9
-                },
-                {
-                    weight: 45,
-                    reps: 9
-                },
-                {
-                    weight: 45,
-                    reps: 9
-                }
-            ]
+            id: this.$route.query.id
             
         }
     },
+    computed:{
+        exercises(){
+            let id = this.id;
+            let workout = this.$store.getters.workouts[id];
+            let exercises = workout.exercises;
+
+            return exercises;
+        }
+    },
+    methods:{
+        edit(exerciseIndex, setIndex, type, event){
+            let value = event;
+            let payload = {
+                value: value,
+                id: this.id,
+                type: type,
+                exerciseIndex: exerciseIndex,
+                setIndex: setIndex
+            };
+            this.$store.commit('inputChangeStore', payload);
+
+        },
+        async saveGoal(){
+
+            await this.$store.dispatch('saveGoal', this.id);
+            
+        }
+    }
 }
 </script>
 
 
-<style lang="scss">
+<style scoped lang="scss">
     .input{
         width: 400px;
     }

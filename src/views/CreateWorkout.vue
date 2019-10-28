@@ -80,8 +80,7 @@ export default {
                             }
                         ]
                     }
-                ]
-                
+                ]  
             },
             sets: '',
             currentSet: 1,

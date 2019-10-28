@@ -44,7 +44,6 @@ export default {
             let number = value.match(/[0-9]+/) ? value.match(/[0-9]+/)[0] : '' ;
             this.number = number;
             
-            
         },
         edit(e){
             let text = e.target;
@@ -53,13 +52,13 @@ export default {
             this.beforeChanging = this.value;
         },
         edited(e){
-            console.log(this.value);
-            console.log(this.number);
+            // console.log(this.value);
+            // console.log(this.number);
             // Ебаный костыль
             if(this.value === this.number){
                 this.number = this.number+'\r';
             }
-            this.$emit('input',this.number+'');
+            this.$emit('update',this.number+'');
             setTimeout(() => {
                 let text = e.target;
                 if(this.beforeChanging != this.value){

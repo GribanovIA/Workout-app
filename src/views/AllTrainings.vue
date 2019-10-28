@@ -34,7 +34,14 @@ export default {
     },
     computed:{
         workouts(){
-            return this.$store.getters.workouts;
+            let workouts = this.$store.getters.workouts;
+            let workoutsArray = [];
+            for (let key in workouts){
+                let elem = workouts[key];
+                elem.id = key
+                workoutsArray.push(elem);
+            }
+            return workoutsArray;
         }
     }
 }

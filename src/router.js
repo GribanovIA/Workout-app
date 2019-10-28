@@ -41,7 +41,7 @@ const router = new Router({
         component: () => import('./views/NewGoals.vue')
     },
     {
-        path: '/newGoals/:goalName',
+        path: '/newGoals/:workoutName',
         name: 'New Goals',
         meta: {
             layout: 'main'
@@ -63,6 +63,14 @@ const router = new Router({
             layout: 'main'
         },
         component: ()=> import('./views/CreateWorkout.vue')
+    },
+    {
+        path: '/workout', 
+        name: 'Workout',
+        meta: {
+            layout: 'main'
+        },
+        component: ()=> import('./views/Workout.vue')
     },
     {
         path: '/allTrainings',
