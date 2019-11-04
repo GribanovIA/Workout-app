@@ -1,6 +1,6 @@
 <template>
-    <div @keyup.enter="prevNext++">
-        
+    <div v-if='Object.keys($store.getters.workoutsHistory).length !== 0'>
+        <div @keyup.enter="prevNext++">
             <b-row>
                 <b-col cols="12">
                     <div class="title">
@@ -25,14 +25,16 @@
                     </div>
                     
                     
-                    <div class="item-wrapper clearfix">
-                        <div v-for='day in days' class="item" >
-                            <div class="circle" :class="{today: day.today, success: day.type == 'success', bad: day.type == 'bad'}">
-                                <h3 class="day">{{day.date}}</h3>
+                        <div class="item-wrapper clearfix">
+                            <div v-for='day in days' class="item">
+                                <router-link tag='div' :to='"/calendar/"+day.routerLink' v-if='day.type !== null' class="circle" :class="{today: day.today, success: day.type == 'success', bad: day.type == 'bad'}">
+                                    <h3 class="day">{{day.date}}</h3>
+                                </router-link>
+                                <div v-else class="circle" :class="{today: day.today, success: day.type == 'success', bad: day.type == 'bad'}">
+                                    <h3 class="day">{{day.date}}</h3>
+                                </div>
                             </div>
-                            
                         </div>
-                    </div>
 
 
                     <div class="legend">
@@ -57,7 +59,7 @@
                 <div class="col-12 panel">
                 </div>
             </b-row>
-
+        </div>
     </div>
 </template>
 
@@ -65,7 +67,10 @@
 'use strict';
     export default {
         name: 'home',
-        mounted(){
+        // async beforeCreated(){
+        //     await this.$store.dispatch('fetchWorkoutsHistory');
+        // },
+        async mounted(){
             window.addEventListener('keyup',e=>{
                 if(e.code == 'ArrowRight'){
                     this.prevNext++;
@@ -74,6 +79,8 @@
                     this.prevNext--;
                 }
             })
+            await this.$store.dispatch('fetchWorkoutsHistory');
+            
         },
         data() {
             return {
@@ -88,37 +95,52 @@
                     'Вс'
                 ],
                 database:[
-                    {date: new Date(2019,9,6),type: 'success'},
-                    {date: new Date(2019,9,9),type: 'success'},
-                    {date: new Date(2019,9,11),type: 'bad'},
-                    {date: new Date(2019,9,15),type: 'success'},
-                ]
+                    {date: '28-10-2019',type: 'success'}
+                    // {date: new Date(2019,9,9),type: 'success'},
+                    // {date: new Date(2019,9,11),type: 'bad'},
+                    // {date: new Date(2019,9,15),type: 'success'},
+                ],
+                testObject : {
+                    '31-10-2019' : {
+                        name: 'hell0 world'
+                    }
+                },
+                insideFunction: 'context'
 
             }
         },
         computed:{
+            workoutsHistory(){
+                return this.$store.getters.workoutsHistory;
+            },
             days(){
+                // Необходимо сделать в виде декоратора для объекта даты
+                function dateFormat(date){
+                    return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+                }
                 function checkEqualDate(first, second){
-                    return first.getFullYear() === second.getFullYear() && first.getMonth() === second.getMonth() && first.getDate() === second.getDate();
+                    return first === second;
                 };
-                function getType(date,db){
-                    let find = false;
-                    db.forEach(item=>{
-                        if(checkEqualDate(date,item.date)){
-                            find = item;
+                function getType(date,workoutsHistory){
+                    let workoutsHistoryKeys = Object.keys(workoutsHistory);
+                    console.log(workoutsHistoryKeys);
+
+                    let match = false;
+                    workoutsHistoryKeys.forEach(workoutHistoryKey=>{
+                        if(checkEqualDate(date,workoutHistoryKey)){
+                            match = workoutHistoryKey;
                         }
                     });
-                        find = find ? find.type : '=(';
-                        console.log(find);
-                    return find;
+                        let type = match ? workoutsHistory[match].type : null;
+                    return type;
 
                 }
-                let date = this.date;
+                let dateIterable = this.date;
                 // Получает текущий месяц
-                let month = date.getMonth();
+                let month = dateIterable.getMonth();
                 //Узнаем какой день недели 1 число месяца
-                date.setDate(1);
-                let dayWeek = date.getDay() ? date.getDay() : 7;
+                dateIterable.setDate(1);
+                let dayWeek = dateIterable.getDay() ? dateIterable.getDay() : 7;
 
                 let dayNames={
                     0: 'Вс',
@@ -134,29 +156,40 @@
                 for(let i=0; i<dayWeek-1; i++){
                     days.push({date: '', name: ''});
                 }
+
+
+
+
                 // Узнаем кол-во дней в месяце и заполняем массив
                 let i = 0;
                 do{
                     // Изменяет дату на 1 день вперед
-                    date.setDate(++i);
-                    let day = date.getDay();
+                    dateIterable.setDate(++i);
+                    console.log(i);
+                    let dateFormatValue = dateFormat(dateIterable);
+                    let day = dateIterable.getDay();
                     // Делаем проверку на текущий день
-                    let now = new Date();
+                    let now = dateFormat(new Date());
                     days.push(
                         {
                             date: i,
+                            routerLink: dateFormatValue,
                             name: dayNames[day],
-                            today: checkEqualDate(date,now),
-                            type: getType(date,this.database)
+                            today: checkEqualDate(dateFormatValue,now),
+                            type: getType(dateFormatValue,this.workoutsHistory)
                         });
                     
-                }while(month == date.getMonth());
+                }while(month == dateIterable.getMonth());
                 days.splice(-1,1);
                 return days;
+
+
             },
             date(){
                 let date = new Date();
                 //Увеличиваем дату на месяц
+                //Проблема если день приходится на 31 число , то смещение даты только на месяца с 31 днем. Необходимо обнулить день
+                date.setDate(1);
                 date.setMonth(date.getMonth() + this.prevNext);
                 return date;
             },

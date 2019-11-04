@@ -42,7 +42,7 @@ const router = new Router({
     },
     {
         path: '/newGoals/:workoutName',
-        name: 'New Goals',
+        name: 'New Goal',
         meta: {
             layout: 'main'
         },
@@ -55,6 +55,14 @@ const router = new Router({
             layout: 'main'
         },
         component: () => import('./views/Calendar.vue')
+    },
+    {
+        path: '/calendar/:date',
+        name: 'CalendarDate',
+        meta: {
+            layout: 'main'
+        },
+        component: () => import('./views/CalendarDate.vue')
     },
     {
         path: '/createWorkout',

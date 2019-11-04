@@ -13,7 +13,7 @@
                     </b-card-text>
                 </b-card>
             </div>
-            <!-- <b-btn @click.prevent='saveGoal' variant="success">Новая цель</b-btn> -->
+            <b-btn @click='saveToDB' variant="primary">Final</b-btn>
         </div>
     </div>
 </template>
@@ -23,6 +23,9 @@ import Changing from '../components/Changing';
 export default {
     components:{
         Changing
+    },
+    async mounted(){
+        await this.$store.dispatch('fetchWorkoutsHistory');
     },
     data() {
         return {
@@ -35,14 +38,20 @@ export default {
                     text: this.$route.query.workoutName,
                     active: true
                 }
-            ]
+            ],
+            // workout: JSON.parse(JSON.stringify(this.$store.getters.workouts[this.$route.query.id])),
+            // workoutsHistory: this.$store.getters.workoutsHistory
         }
     },
     computed:{
         workout(){
             return JSON.parse(JSON.stringify(this.$store.getters.workouts[this.$route.query.id]));
         },
+        workoutsHistory(){
+            return this.$store.getters.workoutsHistory;
+        },
         exercises(){
+            
             return this.workout.exercises;
         }
     },
@@ -52,6 +61,45 @@ export default {
             this.workout.exercises[exerciseIndex].sets[setIndex][type] = event;
 
         },
+        saveToDB(){
+            function dateFormat(date){
+                return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+            }
+            function concat(newObj, oldObj){
+                let exercisesLength = newObj.exercises.length,
+                    concatObj = {};
+                concatObj.workoutName = newObj.workoutName;
+                concatObj.exercises = [];
+                let i = 0;
+                let j = 0;
+                for(i; i< exercisesLength; i++){
+                    let exercise = newObj.exercises[i].exerciseName;
+                    concatObj.exercises.push({
+                        exerciseName: newObj.exercises[i].exerciseName,
+                        sets:[]
+                    });
+                    for(j; j<newObj.exercises[i].sets.length; j++){
+                        concatObj.exercises[i].sets.push({
+                            new: newObj.exercises[i].sets[j],
+                            old: oldObj.exercises[i].sets[j]
+                        });
+                    }
+                }
+                return concatObj;
+            }
+            let dateString = dateFormat(new Date());
+            let concatObj = concat(this.workout,this.$store.getters.workouts[this.$route.query.id]);
+            concatObj.type = 'bad';
+            this.workoutsHistory[dateString] = concatObj;
+            // this.workoutsHistory[dateString] = {
+            //     type: 'bad',
+            //     new: this.workout,
+            //     old: this.$store.getters.workouts[this.$route.query.id]
+            // }
+            let save = this.workoutsHistory;
+            this.$store.dispatch('addWorkoutsHistory', save)
+            this.$store.dispatch('updateWorkout',this.workout);
+        }
     }
 }
 </script>

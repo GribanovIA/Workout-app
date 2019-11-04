@@ -3,6 +3,7 @@ export default {
 
     state:{
         workouts: {},
+        workoutsHistory: {},
         some: 'text'
     },
     getters:{
@@ -11,6 +12,9 @@ export default {
         },
         some(state){
             return state.some;
+        },
+        workoutsHistory(state){
+            return state.workoutsHistory;
         }
     },
     mutations:{
@@ -29,6 +33,14 @@ export default {
         },
         changeStore(state){
             state.some = 'new value some';
+        },
+        fetchWorkoutsHistory(state, payload){
+            state.workoutsHistory = payload;
+        },
+        updateWorkout(state, workout){
+            console.log(workout.id);
+            let key = workout.id;
+            state.workouts[key] = workout;
         }
     },
 
@@ -46,6 +58,17 @@ export default {
             await firebase.database().ref(`users/${uid}/workouts/${id}`).set(workout);
             
         },
+        async addWorkoutsHistory({dispatch},payload){
+            let uid = await dispatch('getUid');
+            await firebase.database().ref(`users/${uid}/workoutsHistory`).set(payload)
+        },
+        async fetchWorkoutsHistory({commit, dispatch}){
+            let uid = await dispatch('getUid');
+            let payload = (await firebase.database().ref(`users/${uid}/workoutsHistory`).once('value')).val();
+            payload = payload ? payload : {};
+
+            commit('fetchWorkoutsHistory', payload);
+        },
         async fetchInfoFromDatabase({commit ,dispatch}){
             let uid = await dispatch('getUid');
             let result = (await firebase.database().ref(`users/${uid}/workouts`).once('value')).val();
@@ -57,6 +80,13 @@ export default {
             // }
             // let arr = Object.values(result);
             commit('addInfoFromDatabase', result);
+        },
+        async updateWorkout({commit, dispatch},workout){
+            console.log(workout.id);
+            let uid = await dispatch('getUid');
+            let id = workout.id;
+            await firebase.database().ref(`users/${uid}/workouts/${id}`).set(workout);
+            commit('updateWorkout',workout);
         },
         test({commit},id){
             commit('test');
