@@ -1,45 +1,50 @@
 <template>
-    <b-row align-h='center'>
-        <b-col align-self="center" cols="12" lg='6'>
-            <div class="main">
-                <h3>Login</h3>
-                <div class="input">
-                    <b-form-input v-model='email' placeholder="Email"></b-form-input>
-                    <b-form-text>We will convert your username to lowercase instantly</b-form-text>
-                </div>
-                <div class="input">
-                    <b-form-input v-model='password' type='password' placeholder='Password'></b-form-input>
-                    <b-form-text>We will convert your username to lowercase instantly</b-form-text>
-                </div>
-                <b-btn @click='submit' variant="primary">Войти</b-btn>
-                <p>Нет аккаунта? <router-link to='/registration'>Зарегистрироваться</router-link></p>
-            </div>
-        </b-col>
-    </b-row>
+  <b-row align-h="center">
+    <b-col align-self="center" cols="12" lg="6">
+      <div class="main">
+        <h3>Login</h3>
+        <div class="input">
+          <b-form-input v-model="email" placeholder="Email" />
+          <b-form-text>We will convert your username to lowercase instantly</b-form-text>
+        </div>
+        <div class="input">
+          <b-form-input v-model="password" type="password" placeholder="Password" />
+          <b-form-text>We will convert your username to lowercase instantly</b-form-text>
+        </div>
+        <b-btn variant="primary" @click="submit">
+          Войти
+        </b-btn>
+        <p>
+          Нет аккаунта? <router-link to="/registration">
+            Зарегистрироваться
+          </router-link>
+        </p>
+      </div>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            email: '',
-            password: ''
-        }
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    async submit() {
+      const formData = {
+        email: this.email,
+        password: this.password,
+      };
+      try {
+        await this.$store.dispatch('login', formData);
+        this.$router.push('/');
+      } catch (e) {}
     },
-    methods:{
-       async submit(){
-            let formData={
-                email: this.email,
-                password: this.password
-            }
-            try{
-                await this.$store.dispatch('login',formData);
-                this.$router.push('/');
-            }catch(e){}
-            
-        }
-    }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -87,10 +92,10 @@ export default {
         .input{
         margin-bottom: 15px;
             .form-control{
-                
+
             }
         }
     }
-    
-    
+
+
 </style>

@@ -11,12 +11,12 @@
                         <b-nav-item to='/createWorkout'>Create Workout</b-nav-item>
                     </b-navbar-nav>
                     <b-navbar-nav class='ml-auto'>
-                        <b-nav-item to='/login'>Login</b-nav-item>
+                        <!-- <b-nav-item to='/login'>Login</b-nav-item>
                         <b-nav-item to='/registration'>Registration</b-nav-item>
                         <b-nav-item @click='logout'>Logout</b-nav-item>
                         <b-nav-item @click='getId'>Get User id</b-nav-item>
                         <b-nav-item to='/allTrainings'>All Trainings</b-nav-item>
-                        <b-nav-item>Settings</b-nav-item>
+                        <b-nav-item>Settings</b-nav-item> -->
                     </b-navbar-nav>
                 </b-collapse>
             </b-navbar>
@@ -24,45 +24,45 @@
 
             <router-view />
 
-            
+
     </b-container>
-        
+
 </template>
 
 <script>
 export default {
-    name: 'MainLayout',
-    async mounted(){
-        // console.log('main layout start');
-        await this.$store.dispatch('fetchInfoFromDatabase');
-        // console.log('main layout fetched info');
-    },
-    data() {
-        return {
+  name: 'MainLayout',
+  async mounted() {
+    // console.log('main layout start');
+    await this.$store.dispatch('fetchInfoFromDatabase');
+    // console.log('main layout fetched info');
+  },
+  data() {
+    return {
 
-        }
-    },
-    computed:{
+    };
+  },
+  computed: {
 
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('logout');
+      this.$router.push('/login');
     },
-    methods:{
-        async logout(){
-            await this.$store.dispatch('logout');
-            this.$router.push('/login');
-        },
-        getId(){
-            let user = this.$store.dispatch('getUid');
-            console.log(user);
-        }
+    getId() {
+      const user = this.$store.dispatch('getUid');
+      console.log(user);
     },
-    components:{
+  },
+  components: {
 
-    }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">
     .main{
-        
+
     }
 </style>

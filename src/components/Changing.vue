@@ -1,73 +1,68 @@
 <template>
-        <div class="input">
-                <b-form-input @update='update' :class='tag' class='input-changing' @click='edit' @blur='edited'  @keyup.enter='$event.target.blur()' :value='valueModified'></b-form-input>
-        </div>
-
+  <div class="input">
+    <b-form-input :class="tag" class="input-changing" @update="update" :value='valueModified' @click="edit" @blur="edited" @keyup.enter="$event.target.blur()" />
+  </div>
 </template>
 
 <script>
 export default {
-    props:{
-        value:{
+  props: {
+    value: {
 
-        },
-        tag:{
+    },
+    tag: {
 
-        },
-        textBefore:{
-            default: ''
-        },
-        textAfter:{
-            default: ''
-        },
-        "tag-modile":{
+    },
+    textBefore: {
+      default: '',
+    },
+    textAfter: {
+      default: '',
+    },
+    'tag-modile': {
 
-        }
     },
-    data() {
-        return {
-            beforeChanging: '',
-            number: this.value
-            
-        }
+  },
+  data() {
+    return {
+      beforeChanging: '',
+      number: this.value,
+
+    };
+  },
+  computed: {
+    valueModified() {
+      return this.textBefore + this.value + this.textAfter;
     },
-    computed:{
-        valueModified(){
-            return this.textBefore+this.value+this.textAfter
-            
-            ;
-        }
+  },
+  methods: {
+    update(value) {
+      const number = value.match(/[0-9]+/) ? value.match(/[0-9]+/)[0] : '';
+      this.number = number;
     },
-    methods:{
-        update(value){
-            
-            let number = value.match(/[0-9]+/) ? value.match(/[0-9]+/)[0] : '' ;
-            this.number = number;
-            
-        },
-        edit(e){
-            let text = e.target;
-            text.value = this.number;
-            text.classList.remove('changed');
-            this.beforeChanging = this.value;
-        },
-        edited(e){
-            // console.log(this.value);
-            // console.log(this.number);
-            // Ебаный костыль
-            if(this.value === this.number){
-                this.number = this.number+'\r';
-            }
-            this.$emit('update',this.number+'');
-            setTimeout(() => {
-                let text = e.target;
-                if(this.beforeChanging != this.value){
-                    text.classList.add('changed');
-                }
-            }, 500);
+    edit(e) {
+      const text = e.target;
+      text.value = this.number;
+      text.classList.remove('changed');
+      this.beforeChanging = this.value;
+    },
+    edited(e) {
+      // console.log(this.value);
+      // console.log(this.number);
+      // Ебаный костыль
+      if (this.value === this.number) {
+        this.number = `${this.number}\r`;
+      }
+      this.$emit('update', `${this.number}`);
+      setTimeout(() => {
+        const text = e.target;
+        if (this.beforeChanging != this.value) {
+          text.classList.add('changed');
         }
-    }
-}
+      }, 500);
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -100,7 +95,7 @@ export default {
     }
     .h1 {
         font-size: 2.5rem;
-        
+
     }
     .h2 {
         font-size: 2rem;
@@ -121,7 +116,7 @@ export default {
         line-height: 1.5;
     }
     @media screen and (max-width: 576px) {
-        
+
         .h1 {
             font-size: 1rem;
 

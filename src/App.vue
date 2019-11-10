@@ -1,36 +1,34 @@
 <template>
-    <div id="app">
-        <component :is="layout">
-            
-        </component>
-      
-    </div>
+  <div id="app">
+    <component :is="layout" />
+  </div>
 </template>
 
 <script>
-import MainLayout from './layouts/MainLayout';
-import EmptyLayout from './layouts/EmptyLayout';
-export default{
-    components:{
-        MainLayout,EmptyLayout
-    },
-    mounted(){
+import MainLayout from './layouts/MainLayout.vue';
+import EmptyLayout from './layouts/EmptyLayout.vue';
 
-    },
-    data(){
-        return {
-            
-        }
-    },
-    computed:{
-        layout(){
-            return (this.$route.meta.layout || 'empty')+'-layout';
-        }
-    },    
-    methods:{
+export default {
+  components: {
+    MainLayout, EmptyLayout,
+  },
+  data() {
+    return {
 
-    }
-}
+    };
+  },
+  computed: {
+    layout() {
+      return `${this.$route.meta.layout || 'empty'}-layout`;
+    },
+  },
+  mounted() {
+
+  },
+  methods: {
+
+  },
+};
 </script>
 
 <style lang="scss">

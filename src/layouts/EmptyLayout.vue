@@ -3,18 +3,18 @@
         <b-container>
             <router-view />
         </b-container>
-        
+
     </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            
-        }
-    },
-}
+  data() {
+    return {
+
+    };
+  },
+};
 </script>
 
 

@@ -1,5 +1,5 @@
-export default{
-    bind(el,{value}){
-        
-    }   
-}
+export default {
+  bind(el, { value }) {
+
+  },
+};

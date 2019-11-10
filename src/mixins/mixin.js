@@ -1,13 +1,13 @@
 export default {
-    data() {
-        return {
+  data() {
+    return {
 
-        }
-    },
-    computed(){
+    };
+  },
+  computed() {
 
-    },
-    methods: {
+  },
+  methods: {
 
-    }
-}
+  },
+};

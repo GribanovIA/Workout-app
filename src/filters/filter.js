@@ -1,3 +1,3 @@
-export default function filter(val){
-    return val;
+export default function filter(val) {
+  return val;
 }
